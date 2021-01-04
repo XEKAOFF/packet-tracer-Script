@@ -1,0 +1,136 @@
+--------Create to your Vlan------
+vlan 10 
+name poste peda 
+
+vlan 20
+name poste peda 
+ 
+vlan 56 
+name poste admin  
+
+vlan 99
+name poste administrateur 
+ 
+vlan 58 
+name poste admin prof 
+
+vlan 100
+name server-dhcp 
+ -------------------------------
+ -----create your interface------
+interface range fa0/1-2
+switchport access vlan 56
+
+interface range fa0/3-4
+switchport access vlan 99
+
+interface range fa0/5-7
+switchport access vlan 10
+
+interface range fa0/5-7
+switchport access vlan 20
+
+interface range fa0/1-4 
+switchport access vlan 58 
+
+interface range fa0/11-12
+switchport access vlan 100
+-------------------------------
+
+
+-------Create your Lacp and Trunk-Mode---------
+interface range fa0/0-4
+switchport access vlan 100
+//config interface //
+interface range fa0/21 - 24 
+channel-group 2 mode active 
+channel-protocol lacp
+
+//config trunk mode // 
+interface port-channel 2
+switchport mode trunk 
+switchport trunk allowed vlan 10,20,
+no shut 
+exit 
+---------------------------------------------------
+
+
+
+--------DHCP POOL Router--------
+
+ip dhcp pool 99
+network 11.99.1.0 255.255.0.0
+dns 8.8.8.8
+default-router 11.99.255.254
+service dhcp
+
+
+ip dhcp pool 10
+network 11.10.1.0 255.255.0.0
+dns 8.8.8.8
+default-router 11.10.255.254
+service dhcp
+
+ip dhcp pool 56
+network 11.56.1.0 255.255.0.0
+dns 8.8.8.8
+default-router 11.56.255.254
+service dhcp
+
+ip dhcp pool 100
+network 11.100.1.0 255.255.0.0
+dns 8.8.8.8
+default-router 11.100.255.254
+service dhcp
+
+
+ip dhcp pool 20
+network 11.20.1.0 255.255.0.0
+dns 8.8.8.8
+default-router 11.20.255.254
+service dhcp
+
+ip dhcp pool 58
+network 11.58.1.0 255.255.0.0
+dns 8.8.8.8
+default-router 11.58.255.254
+service dhcp
+--------------------------------------
+
+----------Create to encapsulation to assigned ip adress---------
+interface fa0/0.100
+encapsulation dot1Q 100
+ip address 11.100.255.254 255.255.0.0
+no shut
+
+11.100.255.254
+
+interface FastEthernet0/0.20
+encapsulation dot1Q 20
+ip address 192.168.20.1 255.255.255.0
+ip helper-address 172.16.24.2
+no shut
+--------------------------------------------------------------------
+
+
+
+---------IP HELPER-----
+interface FastEthernet0/0.10
+ip helper-address 192.168.1.2
+no shut
+
+-------------------------
+
+
+----------Extra-command--------
+
+conf t
+int fast0/24
+switchport mode trunk
+
+interface range fa0/0-18
+switchport acces vlan 100
+
+show vlan 
+
+-----------------------------------
